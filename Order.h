@@ -1,9 +1,10 @@
 #ifndef ORDER_H
 #define ORDER_H
+
 #include <iostream>
 #include <map>
 
-#include "Product.h"
+#include "OrderItem.h"
 using namespace std;
 
 class Order {
@@ -11,14 +12,19 @@ class Order {
     int orderID;
     int customerID;
     int numProducts;
+    map<int, OrderItem*> orderItems;
 
    public:
     Order() {}
 
-    Order(int orderID, int customerID, int numProducts) {
+    Order(int orderID, int customerID) {
         this->orderID = orderID;
         this->customerID = customerID;
-        this->numProducts = numProducts;
+        this->numProducts = 0;
+    }
+
+    int getSize(){
+        return orderItems.size();
     }
 
     void placeOrder() {
@@ -29,7 +35,7 @@ class Order {
     }
 
     void SetOrderID(int orderID) {
-        orderID = orderID;
+        this -> orderID = orderID;
     }
 
     int GetCustomerID() const {
@@ -37,7 +43,7 @@ class Order {
     }
 
     void SetCustomerID(int customerID) {
-        customerID = customerID;
+        this -> customerID = customerID;
     }
 
     int GetNumProducts() const {
@@ -45,8 +51,64 @@ class Order {
     }
 
     void SetNumProducts(int numProducts) {
-        numProducts = numProducts;
+        this -> numProducts = numProducts;
     }
+
+    void addOrderItem(OrderItem* i){
+        if (orderItems.find(i -> GetOrderItemID()) != orderItems.end()){
+            return;
+        }
+        orderItems[i -> GetOrderItemID()] = i;
+    }
+
+    void viewOrder(){
+        for (auto it = orderItems.begin(); it != orderItems.end(); it++){
+            OrderItem* item = it -> second;
+            cout << item -> GetOrderItemID() << ": " << item -> GetProductName();
+            cout << endl;
+        }
+    }
+};
+
+class OrderList{
+private:
+    map<int, Order*> list;
+
+public:
+    OrderList(){}
+
+    void printBill(Order* o){
+        addOrder(o);
+        o -> viewOrder();
+    }
+
+    void addOrder(Order* o){
+        o -> SetOrderID(list.size());
+        list[o -> GetOrderID()] = o;
+    }
+
+    void removeOrder(int ID){
+        list.erase(ID);
+    }
+
+    void findOrder(){
+        int ID;
+        cout << "Enter the order ID: "; cin >> ID;
+
+        findOrder(ID);
+    }
+
+    void findOrder(int ID){
+        if (list.find(ID) == list.end()){
+            cout << "Order doesn't exist!";
+            return;
+        }
+        else{
+            list[ID] -> viewOrder();
+        }
+
+    }
+
 };
 
 #endif

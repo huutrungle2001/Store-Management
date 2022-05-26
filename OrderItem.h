@@ -1,27 +1,34 @@
 #ifndef ORDER_ITEM_H
 #define ORDER_ITEM_H
+
 #include <iostream>
+#include "Product.h"
+
 using namespace std;
 
-class OrderItem {
+class OrderItem:Product {
    private:
     int orderItemID;
-    int productID;
 
    public:
-    OrderItem() {}
 
-    OrderItem(int orderItemID, int productID) {
+    OrderItem(int orderItemID, Product p) {
         this->orderItemID = orderItemID;
-        this->productID = productID;
+        this->productID = p.GetProductID();
+        this->productName = p.GetProductName();
+        this->productRate = p.GetProductRate();
     }
 
     int GetOrderItemID() const {
         return orderItemID;
     }
 
+    string GetProductName() const {
+        return productName;
+    }
+
     void SetOrderItemID(int orderItemID) {
-        orderItemID = orderItemID;
+        this -> orderItemID = orderItemID;
     }
 
     int GetProductID() const {
@@ -29,7 +36,7 @@ class OrderItem {
     }
 
     void SetProductID(int productID) {
-        productID = productID;
+        this -> productID = productID;
     }
 };
 
