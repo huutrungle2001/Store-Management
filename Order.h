@@ -11,7 +11,7 @@ class Order {
    private:
     int orderID;
     int customerID;
-    int numProducts;
+    int totalOrder;
     map<int, OrderItem*> orderItems;
 
    public:
@@ -20,7 +20,7 @@ class Order {
     Order(int orderID, int customerID) {
         this->orderID = orderID;
         this->customerID = customerID;
-        this->numProducts = 0;
+        this->totalOrder = 0;
     }
 
     int getSize(){
@@ -46,12 +46,12 @@ class Order {
         this -> customerID = customerID;
     }
 
-    int GetNumProducts() const {
-        return numProducts;
+    int GetTotalOrder() const {
+        return totalOrder;
     }
 
-    void SetNumProducts(int numProducts) {
-        this -> numProducts = numProducts;
+    void SetTotalOrder(int totalOrder) {
+        this -> totalOrder = totalOrder;
     }
 
     void addOrderItem(OrderItem* i){
@@ -61,10 +61,21 @@ class Order {
         orderItems[i -> GetOrderItemID()] = i;
     }
 
-    void viewOrder(){
+    int getTotalAmount(){
+        int totalAmount = 0;
         for (auto it = orderItems.begin(); it != orderItems.end(); it++){
             OrderItem* item = it -> second;
-            cout << item -> GetOrderItemID() << ": " << item -> GetProductName();
+            totalAmount += item -> GetProductQuantity();
+        }
+
+        return totalAmount;
+    }
+
+    void viewOrder(){
+        cout << "Number of products in bill: " << getTotalAmount() << endl;
+        for (auto it = orderItems.begin(); it != orderItems.end(); it++){
+            OrderItem* item = it -> second;
+            cout << item -> GetOrderItemID() << ": " << item -> GetProductName() << ": " << item -> GetProductQuantity();
             cout << endl;
         }
     }

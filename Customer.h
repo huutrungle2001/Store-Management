@@ -82,8 +82,10 @@ class Customer {
             cout << "Product doesn't exist!" << endl;
             return;
         }
+        int quantity;
+        cout << "Enter the quantity: "; cin >> quantity;
 
-        OrderItem* item = new OrderItem (cart -> getSize(), * prodList.findProduct(ID));
+        OrderItem* item = new OrderItem (cart -> getSize(), * prodList.findProduct(ID), quantity);
         cart -> addOrderItem(item);
     }
 };
