@@ -1,103 +1,107 @@
 #ifndef MANAGER_H
 #define MANAGER_H
 
-#include "Product.h"
-#include "Order.h"
 #include <map>
 
-class Manager{
-private:
-	ProductList prodList;
-	OrderList ordList;
+#include "Order.h"
+#include "Product.h"
 
-	int ID;
-	string password;
+class Manager {
+   private:
+    ProductList prodList;
+    OrderList ordList;
 
-	map<int, string> accounts;
+    int ID;
+    string password;
 
-public:
-	Manager(){}
+    map<int, string> accounts;
 
-	Manager(ProductList& prodList, OrderList& ordList){
-		this -> prodList = prodList;
-		this -> ordList = ordList;
-	}
+   public:
+    Manager() {}
 
-	void setProductList(ProductList& prodList){
-		this -> prodList = prodList;
-	}
+    Manager(ProductList& prodList, OrderList& ordList) {
+        this->prodList = prodList;
+        this->ordList = ordList;
+    }
 
-	void setOrderList(OrderList& ordList){
-		this -> ordList = ordList;
-	}
+    void setProductList(ProductList& prodList) {
+        this->prodList = prodList;
+    }
 
-	void addProduct(int productID, string productName, double productRate){
-		Product* p = new Product(productID, productName, productRate);
+    void setOrderList(OrderList& ordList) {
+        this->ordList = ordList;
+    }
 
-		prodList.addProduct(p);
-	}
+    void addProduct(int productID, string productName, double productRate) {
+        Product* p = new Product(productID, productName, productRate);
 
-	void deleteProduct(int productID){
-		prodList.deleteProduct(productID);
-	}
+        prodList.addProduct(p);
+    }
 
-	void manageAccount(){
-		int ID; 
-		string password;
-		cout << "Enter the manager ID: "; cin >> ID;
-		cout << "Enter the manager pw: "; cin >> password;
+    void deleteProduct(int productID) {
+        prodList.deleteProduct(productID);
+    }
 
-		accounts[ID] = password;
-		return;
-	}
+    void manageAccount() {
+        int ID;
+        string password;
+        cout << "Enter the manager ID: ";
+        cin >> ID;
+        cout << "Enter the manager pw: ";
+        cin >> password;
 
-	void deleteAccount(){
-		int ID;
-		string password;
-		cout << "Enter the account ID: "; cin >> ID;
-		cout << "Enter the account pw: "; cin >> password;
-		deleteAccount(ID, password);
-	}
+        accounts[ID] = password;
+        return;
+    }
 
-	void deleteAccount(int ID, string password){
-		if (login(ID, password))
-			accounts.erase(ID);
-	}
+    void deleteAccount() {
+        int ID;
+        string password;
+        cout << "Enter the account ID: ";
+        cin >> ID;
+        cout << "Enter the account pw: ";
+        cin >> password;
+        deleteAccount(ID, password);
+    }
 
-	bool login(int ID, string password){
-		if (accounts.find(ID) == accounts.end())
-			return false;
-		return accounts[ID] == password;
-	}
+    void deleteAccount(int ID, string password) {
+        if (login(ID, password))
+            accounts.erase(ID);
+    }
 
-	void toFile(){
-		ofstream file;
-		file.open("Manager.txt");
+    bool login(int ID, string password) {
+        if (accounts.find(ID) == accounts.end())
+            return false;
+        return accounts[ID] == password;
+    }
 
-		file << accounts.size() << endl;
+    void toFile() {
+        ofstream file;
+        file.open("Manager.txt");
 
-		for (auto it = accounts.begin(); it != accounts.end(); it++){
-			file << it -> first << " " << it -> second << endl;
-		}
-	}
+        file << accounts.size() << endl;
 
-	void readFile(){
-		ifstream file;
-		file.open("Manager.txt");
+        for (auto it = accounts.begin(); it != accounts.end(); it++) {
+            file << it->first << " " << it->second << endl;
+        }
+    }
 
-		int n;
-		file >> n;
+    void readFile() {
+        ifstream file;
+        file.open("Manager.txt");
 
-		for (int i = 0; i < n; i++){
-			int ID;
-			string password;
-			file >> ID >> password;
-			accounts[ID] = password;
-		}
+        int n;
+        file >> n;
 
-		file.close();
-	}
+        for (int i = 0; i < n; i++) {
+            int ID;
+            string password;
+            file >> ID >> password;
+            accounts[ID] = password;
+        }
 
+        file.close();
+    }
 };
 
 #endif

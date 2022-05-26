@@ -2,17 +2,17 @@
 #define ORDER_ITEM_H
 
 #include <iostream>
+
 #include "Product.h"
 
 using namespace std;
 
-class OrderItem:Product {
+class OrderItem : Product {
    private:
     int orderItemID;
     int quantity;
 
    public:
-
     OrderItem(int orderItemID, Product p, int quantity) {
         this->orderItemID = orderItemID;
         this->productID = p.GetProductID();
@@ -30,7 +30,7 @@ class OrderItem:Product {
     }
 
     void SetOrderItemID(int orderItemID) {
-        this -> orderItemID = orderItemID;
+        this->orderItemID = orderItemID;
     }
 
     int GetProductID() const {
@@ -38,10 +38,10 @@ class OrderItem:Product {
     }
 
     void SetProductID(int productID) {
-        this -> productID = productID;
+        this->productID = productID;
     }
 
-    int GetProductQuantity() const{
+    int GetProductQuantity() const {
         return quantity;
     }
 };

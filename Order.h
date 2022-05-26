@@ -1,9 +1,9 @@
 #ifndef ORDER_H
 #define ORDER_H
 
+#include <fstream>
 #include <iostream>
 #include <map>
-#include <fstream>
 
 #include "OrderItem.h"
 using namespace std;
@@ -24,7 +24,7 @@ class Order {
         this->totalOrder = 0;
     }
 
-    int getSize(){
+    int getSize() {
         return orderItems.size();
     }
 
@@ -33,7 +33,7 @@ class Order {
     }
 
     void SetOrderID(int orderID) {
-        this -> orderID = orderID;
+        this->orderID = orderID;
     }
 
     int GetCustomerID() const {
@@ -41,7 +41,7 @@ class Order {
     }
 
     void SetCustomerID(int customerID) {
-        this -> customerID = customerID;
+        this->customerID = customerID;
     }
 
     int GetTotalOrder() const {
@@ -49,53 +49,53 @@ class Order {
     }
 
     void SetTotalOrder(int totalOrder) {
-        this -> totalOrder = totalOrder;
+        this->totalOrder = totalOrder;
     }
 
-    void addOrderItem(OrderItem* i){
-        if (orderItems.find(i -> GetOrderItemID()) != orderItems.end()){
+    void addOrderItem(OrderItem* i) {
+        if (orderItems.find(i->GetOrderItemID()) != orderItems.end()) {
             return;
         }
-        orderItems[i -> GetOrderItemID()] = i;
+        orderItems[i->GetOrderItemID()] = i;
     }
 
-    int getTotalAmount(){
+    int getTotalAmount() {
         int totalAmount = 0;
-        for (auto it = orderItems.begin(); it != orderItems.end(); it++){
-            OrderItem* item = it -> second;
-            totalAmount += item -> GetProductQuantity();
+        for (auto it = orderItems.begin(); it != orderItems.end(); it++) {
+            OrderItem* item = it->second;
+            totalAmount += item->GetProductQuantity();
         }
 
         return totalAmount;
     }
 
-    void viewOrder(){
+    void viewOrder() {
         cout << "Number of products in bill: " << getTotalAmount() << endl;
-        for (auto it = orderItems.begin(); it != orderItems.end(); it++){
-            OrderItem* item = it -> second;
-            cout << item -> GetOrderItemID() << ": " << item -> GetProductName() << ": " << item -> GetProductQuantity();
+        for (auto it = orderItems.begin(); it != orderItems.end(); it++) {
+            OrderItem* item = it->second;
+            cout << item->GetOrderItemID() << ": " << item->GetProductName() << ": " << item->GetProductQuantity();
             cout << endl;
         }
     }
 
-    void toFile(){
+    void toFile() {
         string filepath = to_string(orderID) + ".txt";
         ofstream file;
         file.open(filepath);
 
         file << orderID << endl;
         file << customerID << endl;
-        file << orderItems.size() << endl; 
+        file << orderItems.size() << endl;
 
-        for (auto it = orderItems.begin(); it != orderItems.end(); it++){
-            OrderItem* item = it -> second;
-            file << item -> GetOrderItemID() << endl;
-            file << item -> GetProductName() << endl;
-            file << item -> GetProductQuantity() << endl;
+        for (auto it = orderItems.begin(); it != orderItems.end(); it++) {
+            OrderItem* item = it->second;
+            file << item->GetOrderItemID() << endl;
+            file << item->GetProductName() << endl;
+            file << item->GetProductQuantity() << endl;
         }
     }
 
-    void readFile(string filepath, ProductList* prodList){
+    void readFile(string filepath, ProductList* prodList) {
         ifstream file;
         file.open(filepath);
 
@@ -105,7 +105,7 @@ class Order {
         int n;
         file >> n;
 
-        for (int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             int ItemID;
             string name;
             int quantity;
@@ -114,81 +114,79 @@ class Order {
             file >> name;
             file >> quantity;
 
-            OrderItem* oi = new OrderItem(ItemID, * prodList -> findProduct(name), quantity );
+            OrderItem* oi = new OrderItem(ItemID, *prodList->findProduct(name), quantity);
             addOrderItem(oi);
         }
     }
 };
 
-class OrderList{
-private:
+class OrderList {
+   private:
     map<int, Order*> list;
 
-public:
-    OrderList(){}
+   public:
+    OrderList() {}
 
-    void printBill(Order* o){
+    void printBill(Order* o) {
         addOrder(o);
-        o -> viewOrder();
+        o->viewOrder();
     }
 
-    void addOrder(Order* o){
-        o -> SetOrderID(list.size());
-        list[o -> GetOrderID()] = o;
+    void addOrder(Order* o) {
+        o->SetOrderID(list.size());
+        list[o->GetOrderID()] = o;
     }
 
-    void removeOrder(int ID){
+    void removeOrder(int ID) {
         list.erase(ID);
     }
 
-    void findOrder(){
+    void findOrder() {
         int ID;
-        cout << "Enter the order ID: "; cin >> ID;
+        cout << "Enter the order ID: ";
+        cin >> ID;
 
         findOrder(ID);
     }
 
-    void findOrder(int ID){
-        if (list.find(ID) == list.end()){
+    void findOrder(int ID) {
+        if (list.find(ID) == list.end()) {
             cout << "Order doesn't exist!";
             return;
+        } else {
+            list[ID]->viewOrder();
         }
-        else{
-            list[ID] -> viewOrder();
-        }
-
     }
 
-    void toFile(){
+    void toFile() {
         ofstream file;
         file.open("orderID.txt");
 
         file << list.size() << endl;
-        for (auto it = list.begin(); it != list.end(); it++){
-            file << it -> first << endl;
-            it -> second -> toFile();
+        for (auto it = list.begin(); it != list.end(); it++) {
+            file << it->first << endl;
+            it->second->toFile();
         }
     }
 
-    void readFile(ProductList* prodList){
+    void readFile(ProductList* prodList) {
         ifstream file;
         file.open("orderID.txt");
 
         int n;
         file >> n;
 
-        for (int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             Order* o = new Order();
             int ID;
             file >> ID;
             string path = to_string(ID) + ".txt";
-            o -> SetOrderID(ID);
-            o -> readFile(path, prodList);
+            o->SetOrderID(ID);
+            o->readFile(path, prodList);
 
             addOrder(o);
         }
     }
-
 };
 
 #endif
