@@ -66,6 +66,11 @@ public:
 	}
 
 	void MainLoop(){
+		prodList.readFile();
+		mng.readFile();
+		cusList.readFile();
+		orderList.readFile(&prodList);
+
 		while (running){
 			if (role == 0)
 				LoginMenu();
@@ -75,8 +80,12 @@ public:
 				managerMenu();
 			if (role == 3)
 				customerMenu();
-
 		}
+
+		prodList.toFile();
+		cusList.toFile();
+		orderList.toFile();
+		mng.toFile();
 	}
 
 	void LoginMenu(){

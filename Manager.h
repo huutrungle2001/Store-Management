@@ -70,6 +70,34 @@ public:
 		return accounts[ID] == password;
 	}
 
+	void toFile(){
+		ofstream file;
+		file.open("Manager.txt");
+
+		file << accounts.size() << endl;
+
+		for (auto it = accounts.begin(); it != accounts.end(); it++){
+			file << it -> first << " " << it -> second << endl;
+		}
+	}
+
+	void readFile(){
+		ifstream file;
+		file.open("Manager.txt");
+
+		int n;
+		file >> n;
+
+		for (int i = 0; i < n; i++){
+			int ID;
+			string password;
+			file >> ID >> password;
+			accounts[ID] = password;
+		}
+
+		file.close();
+	}
+
 };
 
 #endif

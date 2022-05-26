@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <map>
+#include <fstream>
 
 using namespace std;
 
@@ -46,6 +47,12 @@ class Product {
     void SetProductRate(double productRate) {
         this -> productRate = productRate;
     }
+
+    void toFile(ofstream& file){
+        file << productID << endl;
+        file << productName << endl;
+        file << productRate << endl;
+    }
 };
 
 class ProductList{
@@ -65,6 +72,13 @@ public:
 
         Product* p = new Product(productID, productName, productRate);
 
+        addProduct(p);
+    }
+
+    void addProduct(int productID,
+                    string productName,
+                    double productRate){
+        Product* p = new Product(productID, productName, productRate);
         addProduct(p);
     }
 
@@ -111,6 +125,36 @@ public:
         if (list.find(ID) != list.end())
             return list[ID];
         return nullptr;
+    }
+
+    void toFile(){
+        ofstream file;
+        file.open("Product.txt");
+
+        if (file.is_open()){
+            file << list.size() << endl;
+            for (auto it = list.begin(); it != list.end(); it++){
+                it -> second -> toFile(file);
+            }
+        }
+    }
+
+    void readFile(){
+        ifstream file;
+        file.open("Product.txt");
+        if (file.is_open()){
+            int n;
+            file >> n;
+            for (int i = 0; i < n; i++){
+                int productID;
+                string productName; 
+                double productRate;
+                file >> productID;
+                file >> productName;
+                file >> productRate;
+                addProduct(productID, productName, productRate);
+            }
+        }
     }
 };
 

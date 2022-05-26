@@ -2,6 +2,7 @@
 #define CUSTOMER_H
 
 #include <iostream>
+#include <fstream>
 #include "Order.h"
 
 using namespace std;
@@ -29,6 +30,7 @@ class Customer {
         this->password = password;
 
         cart = new Order();
+        cart -> SetCustomerID(customerID);
     }
 
     int GetCustomerID() const {
@@ -85,8 +87,18 @@ class Customer {
         int quantity;
         cout << "Enter the quantity: "; cin >> quantity;
 
-        OrderItem* item = new OrderItem (cart -> getSize(), * prodList.findProduct(ID), quantity);
+        int orderID = customerID*1000 + ID*100 + quantity*10;
+
+        OrderItem* item = new OrderItem (orderID, * prodList.findProduct(ID), quantity);
         cart -> addOrderItem(item);
+    }
+
+    void toFile(ofstream& file){
+        file << customerID << endl;
+        file << customerName << endl;
+        file << customerAddress << endl;
+        file << customerContact << endl;
+        file << password << endl;
     }
 };
 
@@ -136,7 +148,6 @@ public:
     //  1: success 
     int login(int ID, string password){
         if (findCustomer(ID) == nullptr){
-            cout << "bug";
             return -1;
         }
 
@@ -154,6 +165,38 @@ public:
     void deleteAccount(int ID, string password){
         if (login(ID, password))
             accounts.erase(ID);
+    }
+
+    void toFile(){
+        ofstream file;
+        file.open("Customer.txt");
+        file << list.size() << endl;
+        for (auto it = list.begin(); it != list.end(); it ++){
+            it -> second -> toFile(file);
+        }
+    }
+
+    void readFile(){
+        ifstream file;
+        file.open("Customer.txt");
+        int n;
+        file >> n;
+        for (int i = 0; i < n; i++){
+            int customerID;
+            string customerName;
+            string customerAddress;
+            string customerContact;
+            string password;
+
+            file >> customerID;
+            file >> customerName;
+            file >> customerAddress;
+            file >> customerContact;
+            file >> password;
+
+            Customer* c = new Customer(customerID, customerName, customerAddress, customerContact, password);
+            addCustomer(c);
+        }
     }
 
 };

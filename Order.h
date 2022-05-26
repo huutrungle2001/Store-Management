@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <map>
+#include <fstream>
 
 #include "OrderItem.h"
 using namespace std;
@@ -25,9 +26,6 @@ class Order {
 
     int getSize(){
         return orderItems.size();
-    }
-
-    void placeOrder() {
     }
 
     int GetOrderID() const {
@@ -79,6 +77,47 @@ class Order {
             cout << endl;
         }
     }
+
+    void toFile(){
+        string filepath = to_string(orderID) + ".txt";
+        ofstream file;
+        file.open(filepath);
+
+        file << orderID << endl;
+        file << customerID << endl;
+        file << orderItems.size() << endl; 
+
+        for (auto it = orderItems.begin(); it != orderItems.end(); it++){
+            OrderItem* item = it -> second;
+            file << item -> GetOrderItemID() << endl;
+            file << item -> GetProductName() << endl;
+            file << item -> GetProductQuantity() << endl;
+        }
+    }
+
+    void readFile(string filepath, ProductList* prodList){
+        ifstream file;
+        file.open(filepath);
+
+        file >> orderID;
+        file >> customerID;
+
+        int n;
+        file >> n;
+
+        for (int i = 0; i < n; i++){
+            int ItemID;
+            string name;
+            int quantity;
+
+            file >> ItemID;
+            file >> name;
+            file >> quantity;
+
+            OrderItem* oi = new OrderItem(ItemID, * prodList -> findProduct(name), quantity );
+            addOrderItem(oi);
+        }
+    }
 };
 
 class OrderList{
@@ -118,6 +157,36 @@ public:
             list[ID] -> viewOrder();
         }
 
+    }
+
+    void toFile(){
+        ofstream file;
+        file.open("orderID.txt");
+
+        file << list.size() << endl;
+        for (auto it = list.begin(); it != list.end(); it++){
+            file << it -> first << endl;
+            it -> second -> toFile();
+        }
+    }
+
+    void readFile(ProductList* prodList){
+        ifstream file;
+        file.open("orderID.txt");
+
+        int n;
+        file >> n;
+
+        for (int i = 0; i < n; i++){
+            Order* o = new Order();
+            int ID;
+            file >> ID;
+            string path = to_string(ID) + ".txt";
+            o -> SetOrderID(ID);
+            o -> readFile(path, prodList);
+
+            addOrder(o);
+        }
     }
 
 };
