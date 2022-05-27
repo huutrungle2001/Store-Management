@@ -182,6 +182,7 @@ public:
 		cout << " 1. Search for a product." << endl;
 		cout << " 2. Add product to the cart." << endl;
 		cout << " 3. Print Bill." << endl;
+		cout << " 4. Show products list." << endl;
 		cout << " 0. Log out." << endl;
 		cout << "-1. Exit." << endl;
 		cout << "Your choice: ";
@@ -201,6 +202,9 @@ public:
 					break;
 				case 3:
 					orderList.printBill(currentCus -> printBill());
+					break;
+				case 4:
+					prodList.showList();
 					break;
 
 				case 0:

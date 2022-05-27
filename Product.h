@@ -127,6 +127,15 @@ public:
         return nullptr;
     }
 
+    void showList(){
+        for (auto it = list.begin(); it != list.end(); it++){
+            Product* p = it -> second;
+            cout << p -> GetProductID() << ": ";       
+            cout << p -> GetProductName() << ": ";       
+            cout << p -> GetProductRate() << endl;       
+        }
+    }
+
     void toFile(){
         ofstream file;
         file.open("Product.txt");
