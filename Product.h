@@ -79,6 +79,12 @@ class ProductList {
         addProduct(p);
     }
 
+    void displayProductList() {
+        for(auto it = list.begin(); it != list.end(); ++it) {
+            printProduct(it->second);
+        }
+    }
+
     void addProduct(int productID,
                     string productName,
                     double productRate) {

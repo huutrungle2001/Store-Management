@@ -70,6 +70,7 @@ class Manager {
     }
 
     bool login(int ID, string password) {
+        // Không tìm thấy ID
         if (accounts.find(ID) == accounts.end())
             return false;
         return accounts[ID] == password;

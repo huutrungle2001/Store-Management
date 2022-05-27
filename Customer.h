@@ -90,6 +90,7 @@ class Customer {
         cout << "Enter the quantity: ";
         cin >> quantity;
 
+        // Hash
         int orderID = customerID * 1000 + ID * 100 + quantity * 10;
 
         OrderItem* item = new OrderItem(orderID, *prodList.findProduct(ID), quantity);
@@ -107,7 +108,9 @@ class Customer {
 
 class CustomerList {
    private:
+    // map chứa data của các customers
     map<int, Customer*> list;
+    // map chứa password của các customers
     map<int, string> accounts;
 
    public:

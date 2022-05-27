@@ -34,27 +34,27 @@ class Menu {
     void Login(int ID, string password) {
         // If exit
         if (ID == -1 && password == "x") {
-            running = false;
+            this->running = false;
             return;
         }
 
         // admin: ID: 0  || password: admin
         if (ID == 0) {
             if (password == "admin")
-                role = 1;
+                this->role = 1;
             return;
         }
 
         // If accounts belong to a manager
         if (mng.login(ID, password)) {
-            role = 2;
+            this->role = 2;
             return;
         }
 
         // If accounts belong to a customer
         if (cusList.login(ID, password) == 1) {
             currentCus = cusList.findCustomer(ID);
-            role = 3;
+            this->role = 3;
         }
 
         return;
@@ -183,6 +183,7 @@ class Menu {
         cout << " 1. Search for a product." << endl;
         cout << " 2. Add product to the cart." << endl;
         cout << " 3. Print Bill." << endl;
+        cout << " 4. Show all product." << endl;
         cout << " 0. Log out." << endl;
         cout << "-1. Exit." << endl;
         cout << "Your choice: ";
@@ -203,7 +204,9 @@ class Menu {
                 case 3:
                     orderList.printBill(currentCus->printBill());
                     break;
-
+                case 4:
+                    prodList.displayProductList();
+                    break;
                 case 0:
                     role = 0;
                     break;
