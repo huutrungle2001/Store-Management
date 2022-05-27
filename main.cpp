@@ -1,11 +1,9 @@
 #include "Menu.h"
 
-int main(int argc, char const *argv[])
-{
-	/* code */
-	Menu m;
+int main(int argc, char const *argv[]) {
+    Menu m;
 
-	m.MainLoop();
+    m.MainLoop();
 
-	return 0;
+    return 0;
 }

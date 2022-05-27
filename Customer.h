@@ -1,8 +1,9 @@
 #ifndef CUSTOMER_H
 #define CUSTOMER_H
 
-#include <iostream>
 #include <fstream>
+#include <iostream>
+
 #include "Order.h"
 
 using namespace std;
@@ -30,7 +31,7 @@ class Customer {
         this->password = password;
 
         cart = new Order();
-        cart -> SetCustomerID(customerID);
+        cart->SetCustomerID(customerID);
     }
 
     int GetCustomerID() const {
@@ -38,7 +39,7 @@ class Customer {
     }
 
     void SetCustomerID(int customerID) {
-        this -> customerID = customerID;
+        this->customerID = customerID;
     }
 
     string GetCustomerName() const {
@@ -46,7 +47,7 @@ class Customer {
     }
 
     void SetCustomerName(string customerName) {
-        this -> customerName = customerName;
+        this->customerName = customerName;
     }
 
     string GetCustomerAddress() const {
@@ -54,7 +55,7 @@ class Customer {
     }
 
     void SetCustomerAddress(string customerAddress) {
-        this -> customerAddress = customerAddress;
+        this->customerAddress = customerAddress;
     }
 
     string GetCustomerContact() const {
@@ -62,7 +63,7 @@ class Customer {
     }
 
     void SetCustomerContact(string customerContact) {
-        this -> customerContact = customerContact;
+        this->customerContact = customerContact;
     }
 
     string GetCustomerPassword() const {
@@ -70,30 +71,33 @@ class Customer {
     }
 
     void SetCustomerPassword(string password) {
-        this -> password = password;
+        this->password = password;
     }
 
-    Order* printBill(){
+    Order* printBill() {
         return cart;
     }
 
-    void addItemToCart(ProductList prodList){
+    void addItemToCart(ProductList prodList) {
         int ID;
-        cout << "Enter the product ID: "; cin >> ID;
-        if (prodList.findProduct(ID) == nullptr){
+        cout << "Enter the product ID: ";
+        cin >> ID;
+        if (prodList.findProduct(ID) == nullptr) {
             cout << "Product doesn't exist!" << endl;
             return;
         }
         int quantity;
-        cout << "Enter the quantity: "; cin >> quantity;
+        cout << "Enter the quantity: ";
+        cin >> quantity;
 
-        int orderID = customerID*1000 + ID*100 + quantity*10;
+        // Hash
+        int orderID = customerID * 1000 + ID * 100 + quantity * 10;
 
-        OrderItem* item = new OrderItem (orderID, * prodList.findProduct(ID), quantity);
-        cart -> addOrderItem(item);
+        OrderItem* item = new OrderItem(orderID, *prodList.findProduct(ID), quantity);
+        cart->addOrderItem(item);
     }
 
-    void toFile(ofstream& file){
+    void toFile(ofstream& file) {
         file << customerID << endl;
         file << customerName << endl;
         file << customerAddress << endl;
@@ -102,39 +106,46 @@ class Customer {
     }
 };
 
-class CustomerList{
-private:
-    map <int, Customer*> list;
-    map <int, string> accounts;
-public:
+class CustomerList {
+   private:
+    // map chứa data của các customers
+    map<int, Customer*> list;
+    // map chứa password của các customers
+    map<int, string> accounts;
 
-    CustomerList(){}
+   public:
+    CustomerList() {}
 
-    void addCustomer(Customer* c){
-        int ID = c -> GetCustomerID();
+    void addCustomer(Customer* c) {
+        int ID = c->GetCustomerID();
         list[ID] = c;
-        accounts[ID] = c -> GetCustomerPassword();
+        accounts[ID] = c->GetCustomerPassword();
     }
 
-    Customer* findCustomer(int ID){
+    Customer* findCustomer(int ID) {
         if (list.find(ID) != list.end())
             return list[ID];
         return nullptr;
     }
 
-    void manageAccount(){
+    void manageAccount() {
         int ID;
         string password;
 
-        cout << "Enter the custormer ID: "; cin >> ID;
-        cout << "Enter the custormer pw: "; cin >> password;
-        if (findCustomer(ID) == nullptr){
+        cout << "Enter the custormer ID: ";
+        cin >> ID;
+        cout << "Enter the custormer pw: ";
+        cin >> password;
+        if (findCustomer(ID) == nullptr) {
             string customerName;
             string customerAddress;
             string customerContact;
-            cout << "Enter the custormer name: "; cin >> customerName;
-            cout << "Enter the custormer address: "; cin >> customerAddress;
-            cout << "Enter the custormer contact: "; cin >> customerContact;
+            cout << "Enter the custormer name: ";
+            cin >> customerName;
+            cout << "Enter the custormer address: ";
+            cin >> customerAddress;
+            cout << "Enter the custormer contact: ";
+            cin >> customerContact;
 
             Customer* c = new Customer(ID, customerName, customerAddress, customerContact, password);
             addCustomer(c);
@@ -145,43 +156,45 @@ public:
     // return:
     // -1: custormer doesn't exist
     //  0: wrong password
-    //  1: success 
-    int login(int ID, string password){
-        if (findCustomer(ID) == nullptr){
+    //  1: success
+    int login(int ID, string password) {
+        if (findCustomer(ID) == nullptr) {
             return -1;
         }
 
         return (accounts[ID] == password);
     }
 
-    void deleteAccount(){
+    void deleteAccount() {
         int ID;
         string password;
-        cout << "Enter the account ID: "; cin >> ID;
-        cout << "Enter the account pw: "; cin >> password;
+        cout << "Enter the account ID: ";
+        cin >> ID;
+        cout << "Enter the account pw: ";
+        cin >> password;
         deleteAccount(ID, password);
     }
 
-    void deleteAccount(int ID, string password){
+    void deleteAccount(int ID, string password) {
         if (login(ID, password))
             accounts.erase(ID);
     }
 
-    void toFile(){
+    void toFile() {
         ofstream file;
         file.open("Customer.txt");
         file << list.size() << endl;
-        for (auto it = list.begin(); it != list.end(); it ++){
-            it -> second -> toFile(file);
+        for (auto it = list.begin(); it != list.end(); it++) {
+            it->second->toFile(file);
         }
     }
 
-    void readFile(){
+    void readFile() {
         ifstream file;
         file.open("Customer.txt");
         int n;
         file >> n;
-        for (int i = 0; i < n; i++){
+        for (int i = 0; i < n; i++) {
             int customerID;
             string customerName;
             string customerAddress;
@@ -198,8 +211,6 @@ public:
             addCustomer(c);
         }
     }
-
 };
-
 
 #endif
