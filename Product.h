@@ -105,6 +105,12 @@ public:
 
     }
 
+    void printAllProduct(){
+        for (auto it = list.begin(); it != list.end(); it++){
+            printProduct(it -> second);
+        }
+    }
+
     void findProduct(){
         string name;
         cout << "Enter the product name: "; cin >> name;
